@@ -1,29 +1,41 @@
 pipeline {
-podTemplate(label: 'hello',
-	containers: [
-        containerTemplate(name: 'maven', image: 'maven:alpine', ttyEnabled: true, command: 'cat'),
-        containerTemplate(name: 'docker', image: 'busybox', ttyEnabled: true, command: 'cat')
-  ])
   agent {
-            kubernetes {
-            cloud 'kubernetes'
-          }
-          }
+    kubernetes {
+      label 'hello'
+      yaml """\
+        apiVersion: v1
+        kind: Pod
+        metadata:
+          your-label: some-additional-label
+        spec:
+          containers:
+          - name: maven
+            image: maven:alpine
+            command:
+            - cat
+            tty: true
+          - name: busybox
+            image: busybox
+            command:
+            - cat
+            tty: true
+        """.stripIndent()
+    }
+  }
     stages {
-        stage ('checkout scm') {
-            steps {
-                checkout(scm)
+        stage('Maven') {
+          steps {
+            container('maven') {
+              sh 'mvn -version'
             }
-       }
-        stage('Build') {
+          }
+        }
+        stage('Busybox') {
             steps {
-              container ('docker'){
-              sh 'echo "Hello World"'
-              sh '''
-              echo "Multiline shell steps works too"
-              '''
+                container('busybox') {
+                    sh '/bin/busybox'
+                }
+            }
         }
-      }
-        }
-     }
+    }
 }

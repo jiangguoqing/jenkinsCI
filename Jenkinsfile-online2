@@ -1,0 +1,29 @@
+pipeline {
+podTemplate(label: 'hello',
+	containers: [
+        containerTemplate(name: 'maven', image: 'maven:alpine', ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'docker', image: 'busybox', ttyEnabled: true, command: 'cat')
+  ])
+  agent {
+            kubernetes {
+            cloud 'kubernetes'
+          }
+          }
+    stages {
+        stage ('checkout scm') {
+            steps {
+                checkout(scm)
+            }
+       }
+        stage('Build') {
+            steps {
+              container ('docker'){
+              sh 'echo "Hello World"'
+              sh '''
+              echo "Multiline shell steps works too"
+              '''
+        }
+      }
+        }
+     }
+}
