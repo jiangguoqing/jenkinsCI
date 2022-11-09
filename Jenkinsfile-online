@@ -1,10 +1,14 @@
 pipeline {
   agent {
-    kubernetes
+    kubernetes {
+    cloud 'kubernetes'
   }
+  }
+
     parameters {
         string(name:'TAG_NAME',defaultValue: '',description:'')
     }
+
     environment {
         DOCKER_CREDENTIAL_ID = 'dockerhub-id'
         GITHUB_CREDENTIAL_ID = 'github-id'
