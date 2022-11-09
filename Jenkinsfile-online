@@ -8,12 +8,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-            container('jnlp') {
+
               sh 'echo "Hello World"'
               sh '''
               echo "Multiline shell steps works too"
               '''
-              }
+
         }
         }
      }
