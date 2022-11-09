@@ -9,7 +9,7 @@ metadata:
    name: clean-ci
 spec:
    containers:
-   - name: dind
+   - name: docker
      image: 'docker:stable-dind'
      command:
      - dockerd
@@ -42,9 +42,9 @@ spec:
         stage('Build') {
             steps {
               container ('docker'){
-              sh 'echo "Hello World"'
+              sh 'docker info'
               sh '''
-              echo "Multiline shell steps works too"
+              echo "you did it!!!!!!!  yes!!"
               '''
         }
       }
