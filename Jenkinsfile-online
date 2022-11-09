@@ -3,33 +3,33 @@ pipeline {
       kubernetes {
         label 'hello'
         yaml """\
-apiVersion: v1
-kind: Pod
-metadata:
-   name: clean-ci
-spec:
-   containers:
-   - name: dind
-     image: 'docker:stable-dind'
-     command:
-     - dockerd
-     - --host=unix:///var/run/docker.sock
-     - --host=tcp://0.0.0.0:8000
-     securityContext:
-       privileged: true
-     volumeMounts:
-     - mountPath: /var/run
-       name: cache-dir
-   - name: clean-ci
-     image: 'docker:stable'
-     command: ["/bin/sh"]
-     args: ["-c", "docker info >/dev/null 2>&1; while [ $? -ne 0 ] ; do sleep 3; docker info >/dev/null 2>&1; done; docker pull library/busybox:latest; docker save -o busybox-latest.tar library/busybox:latest; docker rmi library/busybox:latest; while true; do sleep 86400; done"]
-     volumeMounts:
-     - mountPath: /var/run
-       name: cache-dir
-   volumes:
-   - name: cache-dir
-     emptyDir: {}
+        apiVersion: v1
+        kind: Pod
+        metadata:
+           name: clean-ci
+        spec:
+           containers:
+           - name: dind
+             image: 'docker:stable-dind'
+             command:
+             - dockerd
+             - --host=unix:///var/run/docker.sock
+             - --host=tcp://0.0.0.0:8000
+             securityContext:
+               privileged: true
+             volumeMounts:
+             - mountPath: /var/run
+               name: cache-dir
+           - name: clean-ci
+             image: 'docker:stable'
+             command: ["/bin/sh"]
+             args: ["-c", "docker info >/dev/null 2>&1; while [ $? -ne 0 ] ; do sleep 3; docker info >/dev/null 2>&1; done; docker pull library/busybox:latest; docker save -o busybox-latest.tar library/busybox:latest; docker rmi library/busybox:latest; while true; do sleep 86400; done"]
+             volumeMounts:
+             - mountPath: /var/run
+               name: cache-dir
+           volumes:
+           - name: cache-dir
+             emptyDir: {}
 
         """.stripIndent()
           }
