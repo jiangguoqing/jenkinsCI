@@ -30,7 +30,6 @@ spec:
    volumes:
    - name: cache-dir
      emptyDir: {}
-            tty: true
         '''.stripIndent()
           }
           }
