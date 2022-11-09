@@ -1,5 +1,8 @@
 pipeline {
-  agent any
+  agent {
+            kubernetes {
+            cloud 'kubernetes'
+          }
     stages {
         stage ('checkout scm') {
             steps {
@@ -8,12 +11,12 @@ pipeline {
         }
         stage('Build') {
             steps {
-
+              container ('docker'){
               sh 'echo "Hello World"'
               sh '''
               echo "Multiline shell steps works too"
               '''
-
+        }
         }
         }
      }
