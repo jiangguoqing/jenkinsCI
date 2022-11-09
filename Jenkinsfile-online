@@ -14,7 +14,7 @@ pipeline {
             command:
             - cat
             tty: true
-          - name: busybox
+          - name: docker
             image: busybox
             command:
             - cat
@@ -32,7 +32,7 @@ pipeline {
         }
         stage('Busybox') {
             steps {
-                container('busybox') {
+                container('docker') {
                     sh '/bin/busybox'
                 }
             }
