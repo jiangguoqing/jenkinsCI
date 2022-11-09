@@ -42,7 +42,7 @@ spec:
         stage('Build') {
             steps {
               container ('docker'){
-              sh 'docker info'
+              sh 'docker build -t mrjiangguoqing:v2.0'
               sh '''
               echo "you did it!!!!!!!  yes!!"
               '''
