@@ -1,8 +1,8 @@
 pipeline {
   agent {
-      kubernetes {
-        label 'hello'
-        yaml """\
+    kubernetes {
+      label 'hello'
+      yaml """\
         apiVersion: v1
         kind: Pod
         metadata:
@@ -20,23 +20,22 @@ pipeline {
             - cat
             tty: true
         """.stripIndent()
-          }
-          }
+    }
+  }
     stages {
-        stage ('checkout scm') {
-            steps {
-                checkout(scm)
+        stage('Maven') {
+          steps {
+            container('maven') {
+              sh 'mvn -version'
             }
-       }
-        stage('Build') {
+          }
+        }
+        stage('Busybox') {
             steps {
-              container ('docker'){
-              sh 'echo "Hello World"'
-              sh '''
-              echo "Multiline shell steps works too"
-              '''
+                container('docker') {
+                    sh '/bin/busybox'
+                }
+            }
         }
-      }
-        }
-     }
+    }
 }
