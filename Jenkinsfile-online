@@ -12,7 +12,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-              container ('jnlp'){
+              container ('docker'){
               sh 'echo "Hello World"'
               sh '''
               echo "Multiline shell steps works too"
