@@ -3,6 +3,7 @@ pipeline {
             kubernetes {
             cloud 'kubernetes'
           }
+          }
     stages {
         stage ('checkout scm') {
             steps {
