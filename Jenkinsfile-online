@@ -6,9 +6,9 @@ pipeline {
                 checkout(scm)
             }
         }
-        stage('Build') {
+        stage('Build') container ('docker') {
             steps {
-              sh 'echo "Hello World'
+              sh 'echo "Hello World"'
               sh '''
               echo "Multiline shell steps works too"
               '''
