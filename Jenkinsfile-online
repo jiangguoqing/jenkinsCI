@@ -1,4 +1,9 @@
 pipeline {
+podTemplate(label: 'hello',
+	containers: [
+        containerTemplate(name: 'maven', image: 'maven:alpine', ttyEnabled: true, command: 'cat'),
+        containerTemplate(name: 'docker', image: 'busybox', ttyEnabled: true, command: 'cat')
+  ])
   agent {
             kubernetes {
             cloud 'kubernetes'
