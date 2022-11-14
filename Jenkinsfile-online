@@ -59,7 +59,7 @@ spec:
         stage('deploy to dev'){
           steps {
              container ('kubectl'){
-                    sh 'envsubst < yml/my.yaml | kubectl apply -f -'
+                     'envsubst < yml/my.yaml | kubectl apply -f -'
              }
           }
         }
