@@ -15,6 +15,7 @@ spec:
      - dockerd
      - --host=unix:///var/run/docker.sock
      - --host=tcp://0.0.0.0:8000
+     - --insecure-registry=157.230.248.65:30002
      securityContext:
        privileged: true
      volumeMounts:
@@ -30,6 +31,10 @@ spec:
    volumes:
    - name: cache-dir
      emptyDir: {}
+   - name: kubectl
+     image: 'bitnami/kubectl'
+     command: ["/bin/sh"]
+     args: ["-c","while true; do sleep 86400; done"]
         '''.stripIndent()
           }
           }
@@ -42,12 +47,44 @@ spec:
         stage('Build') {
             steps {
               container ('docker'){
-              sh 'docker build -t mrjiangguoqing:v2.0 .'
+              sh 'docker build -t 157.230.248.65:30002/myharbor/gojgq:v1.0 .'
+              sh 'docker login 157.230.248.65:30002'
+              sh 'docker push 157.230.248.65:30002/myharbor/gojgq:v1.0'
               sh '''
               echo "you did it!!!!!!!  yes!!"
               '''
         }
       }
         }
+        stage('deploy to dev'){
+          steps {
+             container ('kubectl'){
+                    sh 'envsubst < yml/my.yaml | kubectl apply -f -'
+             }
+          }
+        }
+
+
+           stage('push with tag'){
+             steps {
+                container ('docker'){
+                    sh '''
+                    echo "git push"
+                    '''
+                }
+             }
+           }
+
+           stage('deploy to prod'){
+             steps {
+                container ('docker'){
+                    sh '''
+                    echo "deploy"
+                    '''
+                }
+             }
+           }
+
+
      }
 }
