@@ -31,7 +31,7 @@ spec:
    - name: kubectl
      image: 'bitnami/kubectl'
      command: ["/bin/sh"]
-     args: ["-c","while true; do sleep 86400; done"]
+     args: ["-c","chown 777 /home/jenkins";"while true; do sleep 86400; done"]
      volumeMounts:
      - mountPath: /var/run
        name: cache-dir
