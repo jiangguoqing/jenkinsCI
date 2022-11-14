@@ -48,7 +48,7 @@ spec:
             steps {
               container ('docker'){
               sh 'docker build -t 157.230.248.65:30002/myharbor/gojgq:v1.0 .'
-              sh 'docker login 157.230.248.65:30002'
+              sh 'docker login 157.230.248.65:30002 -u jgq -p Jgq123456'
               sh 'docker push 157.230.248.65:30002/myharbor/gojgq:v1.0'
               sh '''
               echo "you did it!!!!!!!  yes!!"
