@@ -28,17 +28,14 @@ spec:
      volumeMounts:
      - mountPath: /var/run
        name: cache-dir
-   volumes:
-   - name: cache-dir
-     emptyDir: {}
    - name: kubectl
      image: 'bitnami/kubectl'
      command: ["/bin/sh"]
      args: ["-c","while true; do sleep 86400; done"]
-     volumeMounts:
-     - mountPath: /var/run
-       name: cache-dir
-   '''.stripIndent()
+   volumes:
+   - name: cache-dir
+     emptyDir: {}
+        '''.stripIndent()
           }
           }
     stages {
