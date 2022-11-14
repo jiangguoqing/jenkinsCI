@@ -39,15 +39,25 @@ spec:
                 checkout(scm)
             }
        }
-        stage('Build') {
+        stage('Build and push') {
             steps {
               container ('docker'){
               sh 'docker build -t mrjiangguoqing:v2.0 .'
               sh '''
               echo "you did it!!!!!!!  yes!!"
               '''
+              sh 'docker login '
+              sh 'docker push '
         }
       }
+        }
+        stage('deploy') {
+               steps {
+                 container ('kubectl'){
+                 sh 'kubectl delete -f web.yaml'
+                 sh 'kubectl apply -f web.yaml'
+               }
+               }
         }
      }
 }
