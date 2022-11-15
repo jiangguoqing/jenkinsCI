@@ -32,6 +32,8 @@ spec:
      image: 'bitnami/kubectl'
      command: ["/bin/sh"]
      args: ["-c","while true; do sleep 86400; done"]
+     securityContext:
+       privileged: true
      volumeMounts:
      - mountPath: /var/run
        name: cache-dir
