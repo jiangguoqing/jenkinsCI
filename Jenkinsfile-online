@@ -64,7 +64,7 @@ spec:
         stage('deploy to dev'){
           steps {
              container ('kubectl'){
-                    sh '  kubectl apply -f -'
+                    sh '  kubectl apply -f ./yml/my.yaml'
              }
           }
         }
