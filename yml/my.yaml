@@ -19,6 +19,7 @@ spec:
           ports:
             - name: web
               containerPort: 5000
+
 ---
 kind: Service
 apiVersion: v1
