@@ -40,9 +40,6 @@ spec:
    volumes:
    - name: cache-dir
      emptyDir: {}
-   serviceAccountName: build-robot
-   automountServiceAccountToken: false
-
         '''.stripIndent()
           }
           }
