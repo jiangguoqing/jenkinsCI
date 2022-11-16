@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: example-app
+  namespace: is
 spec:
   replicas: 3
   selector:
@@ -25,6 +26,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: example-app
+  namespace: is
   labels:
     app: example-app
 spec:

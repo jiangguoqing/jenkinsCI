@@ -32,8 +32,6 @@ spec:
      image: '157.230.248.65:30002/myharbor/kubectl:v1.0'
      command: ["/bin/sh"]
      args: ["-c","while true; do sleep 86400; done"]
-     securityContext:
-       privileged: true
      volumeMounts:
      - mountPath: /var/run
        name: cache-dir
