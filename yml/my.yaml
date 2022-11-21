@@ -1,21 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: example-app
+  name: example-app-v3
   namespace: is
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: example-app
+      app: example-app-v3
+      version: v3
   template:
     metadata:
       labels:
-        app: example-app
+        app: example-app-v3
+        version: v3
     spec:
       containers:
         - name: example-app
-          image: 157.230.248.65:30002/myharbor/gojgq:v1.0
+          image: 157.230.248.65:30002/myharbor/gojgq:v3
           imagePullPolicy: Always
           ports:
             - name: web
@@ -35,4 +37,4 @@ spec:
   ports:
     - name: web
       port: 5000
-  type: NodePort
+  type: ClusterIP
