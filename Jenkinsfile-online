@@ -89,7 +89,7 @@ spec:
        //加入sonar
         stage ('') {
             steps {
-                checkout(scm)
+                 checkout(scm)
              }
        }
 
