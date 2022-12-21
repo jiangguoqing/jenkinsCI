@@ -12,7 +12,6 @@
        //改一下标签commit触发CD，触发测试环境CD
        //cd到测试环境，等待review。
        //失败，git回退。
-
        //分支怎么合并的来着？
          //通过，更新生产commit，CD生产。
 adsf
