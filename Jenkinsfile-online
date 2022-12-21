@@ -90,7 +90,7 @@ spec:
         stage ('') {
             steps {
                 checkout(scm)
-            }
+             }
        }
 
 
