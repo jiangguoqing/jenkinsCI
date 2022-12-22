@@ -71,14 +71,13 @@ spec:
        }
 
 
-          stage('SonarQube Analysis') {
+        stage('SonarQube analysis') {
             steps {
-            def scannerHome = tool 'SonarScanner';
-            withSonarQubeEnv() {
-              sh "${scannerHome}/bin/sonar-scanner"
+                withSonarQubeEnv('SonarQube') {
+                    sh "./gradlew sonarqube"
+                }
             }
-          }
-          }
+        }
 
         stage('scan with trivy') {
             steps {
