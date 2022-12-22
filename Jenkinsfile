@@ -72,10 +72,12 @@ spec:
 
 
           stage('SonarQube Analysis') {
+            steps {
             def scannerHome = tool 'SonarScanner';
             withSonarQubeEnv() {
               sh "${scannerHome}/bin/sonar-scanner"
             }
+          }
           }
 
         stage('scan with trivy') {
