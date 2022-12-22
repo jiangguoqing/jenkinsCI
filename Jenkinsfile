@@ -79,7 +79,6 @@ spec:
         }
       }
         }
-
         //镜像扫描
         stage('scan with trivy') {
             steps {
