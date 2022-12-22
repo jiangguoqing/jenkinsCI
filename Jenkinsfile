@@ -29,10 +29,11 @@ spec:
      volumeMounts:
      - mountPath: /var/run
        name: cache-dir
+
    - name: go-lint
      image: 'mwendler/wget'
      command: ["/bin/sh"]
-     args: ["-c","wget -O- -nv https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s v1.50.1","while true; do sleep 86400; done"]
+     args: ["-c","while true; do sleep 86400; done"]
      volumeMounts:
      - mountPath: /var/run
        name: cache-dir
