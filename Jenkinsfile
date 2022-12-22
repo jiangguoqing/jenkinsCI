@@ -29,7 +29,6 @@ spec:
      volumeMounts:
      - mountPath: /var/run
        name: cache-dir
-   //代码检查
    - name: go-lint
      image: 'mwendler/wget'
      command: ["/bin/sh"]
@@ -38,7 +37,7 @@ spec:
      - mountPath: /var/run
        name: cache-dir
 
-  //镜像扫描
+
    - name: trivy
      image: 'aquasec/trivy:0.21.1'
      command: ["/bin/sh"]
@@ -80,7 +79,7 @@ spec:
         }
       }
         }
-        //镜像扫描
+
         stage('scan with trivy') {
             steps {
                 container ('trivy')
