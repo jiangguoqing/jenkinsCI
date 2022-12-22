@@ -95,8 +95,6 @@ spec:
  */      }
 
 
-
-
         //直接通过定义两个image scanner，自动修改指定镜像，完成测试环境与生产环境的操作。
         //git commit测试环境代码库，(考虑自动commit或者手动commit)，人工测试，通过就commit生产代码库。
 
