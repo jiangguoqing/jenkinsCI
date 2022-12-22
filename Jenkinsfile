@@ -73,7 +73,6 @@ spec:
                 }
             }
         }
-      }
 
         stage("Quality Gate"){
 			steps{
