@@ -158,12 +158,18 @@ spec:
 *                //是否部署到生产环境。
 *                input(id: 'deploy-to-dev', message: 'deploy to dev?')
 *                container ('docker'){
-*                    sh '''
+*
+
+
+        sh '''
 *                    echo "deploy"
 *                    '''
 *                }
 *           }
 *            //添加回滚功能
+
+
+
 
 */     }
 }
