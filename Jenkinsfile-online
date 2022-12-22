@@ -91,7 +91,6 @@ spec:
              }
        }
 
-
        //单元测试
         stage ('checkout scm') {
             steps {
