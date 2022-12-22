@@ -17,6 +17,7 @@
         //git回退。
        //（整个的流程，都根据需求来演进。）
 
+
 pipeline {
   agent {
       kubernetes {
