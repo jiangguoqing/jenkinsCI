@@ -68,7 +68,7 @@ spec:
                 script {
                 scannerHome = tool 'sonarsc'
                 }
-                withSonarQubeEnv('SonarQube') {
+                withSonarQubeEnv('ok') {
                 sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
