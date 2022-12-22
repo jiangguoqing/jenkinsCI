@@ -66,7 +66,7 @@ spec:
 		stage("build & SonarQube analysis") {
             steps {
                 script {
-                scannerHome = tool 'SonarQube Scanner'
+                scannerHome = tool 'sonarsc'
                 }
                 withSonarQubeEnv('SonarQube') {
                 sh "${scannerHome}/bin/sonar-scanner"
