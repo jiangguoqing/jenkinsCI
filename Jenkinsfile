@@ -57,32 +57,10 @@ spec:
    volumes:
    - name: cache-dir
      emptyDir: {}
-
         '''.stripIndent()
           }
           }
     stages {
-        stage ('checkout scm') {
-            steps {
-                checkout(scm)
-            }
-       }
-       //加入sonar
-        stage ('') {
-            steps {
-                 checkout(scm)
-             }
-       }
-
-
-       //单元测试
-        stage ('checkout scm') {
-            steps {
-                checkout(scm)
-            }
-       }
-
-        //
         stage ('checkout scm') {
             steps {
                 checkout(scm)
