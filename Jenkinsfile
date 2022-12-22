@@ -60,6 +60,7 @@ spec:
         '''.stripIndent()
           }
           }
+
     stages {
         stage ('checkout scm') {
             steps {
@@ -128,4 +129,3 @@ spec:
 *            //添加回滚功能
 */     }
 }
-adf
