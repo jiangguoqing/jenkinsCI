@@ -88,7 +88,7 @@ spec:
             steps {
                 container ('trivy'){
                 sh "trivy image -f json -o results.json nginx:1.18"
-                recordIssues(tools: [trivy(pattern: 'results.json')])
+                //recordIssues(tools: [trivy(pattern: 'results.json')])
             }
         }
         }
