@@ -63,16 +63,7 @@ spec:
        }
 
 
-		stage("build & SonarQube analysis") {
-            steps {
-                script {
-                scannerHome = tool 'SonarQube Scanner'
-                }
-                withSonarQubeEnv('SonarQube') {
-                sh "${scannerHome}/bin/sonar-scanner"
-                }
-            }
-        }
+
 
         stage("Quality Gate"){
 			steps{
