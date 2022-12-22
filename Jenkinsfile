@@ -62,6 +62,13 @@ spec:
             }
        }
 
+        stage ('做点代码检查') {
+            steps {
+                container ('go-lint'){
+                sh 'golangci-lint run'
+                }
+            }
+       }
 
 		stage("build & SonarQube analysis") {
             steps {
@@ -83,6 +90,7 @@ spec:
 		}
 
 
+
         stage('scan with trivy') {
             steps {
                 container ('trivy'){
@@ -91,6 +99,7 @@ spec:
             }
         }
         }
+
 
 
 
