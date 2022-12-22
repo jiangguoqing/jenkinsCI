@@ -31,7 +31,7 @@ spec:
        name: cache-dir
 
    - name: go-lint
-     image: 'mwendler/wget'
+     image: 'golangci/golangci-lint'
      command: ["/bin/sh"]
      args: ["-c","while true; do sleep 86400; done"]
      volumeMounts:
@@ -62,18 +62,23 @@ spec:
             }
        }
 
-        stage('Build') {
+        stage ('做点代码检查') {
             steps {
-              container ('docker'){
-              sh 'docker build -t 157.230.248.65:30002/myharbor/gojgq:v3 .'
-              sh 'docker login 157.230.248.65:30002 -u jgq -p Jgq123456'
-              sh 'docker push 157.230.248.65:30002/myharbor/gojgq:v3'
-              sh '''
-              echo "you did it!!!!!!!  yes!!"
-              '''
-        }
-      }
-        }
+                container ('go-lint'){
+                sh 'golangci-lint run'
+                }
+            }
+       }
+
+        stage('SCM') {
+            checkout scm
+          }
+          stage('SonarQube Analysis') {
+            def scannerHome = tool 'SonarScanner';
+            withSonarQubeEnv() {
+              sh "${scannerHome}/bin/sonar-scanner"
+            }
+          }
 
         stage('scan with trivy') {
             steps {
