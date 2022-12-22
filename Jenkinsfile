@@ -63,6 +63,26 @@ spec:
        }
 
 
+		stage("build & SonarQube analysis") {
+            steps {
+                script {
+                scannerHome = tool 'SonarQube Scanner'
+                }
+                withSonarQubeEnv('SonarQube') {
+                sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+
+        stage("Quality Gate"){
+			steps{
+				timeout(time: 15, unit: 'MINUTES') {
+					waitForQualityGate abortPipeline: true
+				}
+			}
+		}
+
+
         stage('scan with trivy') {
             steps {
                 container ('trivy')
