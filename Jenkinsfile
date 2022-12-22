@@ -47,13 +47,7 @@ spec:
      - mountPath: /var/run
        name: cache-dir
 
-   - name: kubectl
-     image: '157.230.248.65:30002/myharbor/kubectl:v1.0'
-     command: ["/bin/sh"]
-     args: ["-c","while true; do sleep 86400; done"]
-     volumeMounts:
-     - mountPath: /var/run
-       name: cache-dir
+
    volumes:
    - name: cache-dir
      emptyDir: {}
