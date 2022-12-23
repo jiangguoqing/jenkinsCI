@@ -100,7 +100,7 @@ spec:
         stage('scan with trivy') {
             steps {
                 container ('trivy'){
-                sh "trivy image -f json -o results.json nginx:1.18"
+                sh "trivy image -f json -o results.json 167.71.195.24:30002/myharbor/gojgq:v3"
                 //recordIssues(tools: [trivy(pattern: 'results.json')])
             }
         }
