@@ -87,9 +87,9 @@ spec:
         stage('Build') {
             steps {
               container ('docker'){
-              sh 'docker build -t 167.71.195.24:30002/myharbor/gojgq:v3 .'
+              sh 'docker build -t 167.71.195.24:30002/myharbor/gojgq:v5 .'
               sh 'docker login 167.71.195.24:30002 -u jgq -p Jgq123456'
-              sh 'docker push 167.71.195.24:30002/myharbor/gojgq:v3'
+              sh 'docker push 167.71.195.24:30002/myharbor/gojgq:v5'
               sh '''
               echo "you did it!!!!!!!  yes!!"
               '''
