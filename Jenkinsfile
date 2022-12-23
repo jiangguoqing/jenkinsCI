@@ -16,7 +16,7 @@ spec:
      - dockerd
      - --host=unix:///var/run/docker.sock
      - --host=tcp://0.0.0.0:8000
-     - --insecure-registry=157.230.248.65:30002
+     - --insecure-registry=167.71.195.24:30002
      securityContext:
        privileged: true
      volumeMounts:
