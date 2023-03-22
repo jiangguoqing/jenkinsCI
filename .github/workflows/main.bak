@@ -1,5 +1,4 @@
-name: Go package
-
+name: Go packag
 
 on:
   push:
