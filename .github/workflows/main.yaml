@@ -33,7 +33,7 @@ jobs:
       - name: Get ECR password (temporary)
         id: get-ecr-password
         #run: echo "::set-output name=password::$(aws ecr get-login-password)"
-        run: echo ${{ GITHUB_ACTION_PATH }}
+        run: echo $GITHUB_ACTION_PATH
 
       - name: Build, tag, and push image to Amazon ECR
         env:
