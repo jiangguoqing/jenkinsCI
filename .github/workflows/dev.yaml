@@ -1,9 +1,8 @@
-
-name: Deploy to ECR
-
 on:
+  # Trigger the workflow on push or pull request
   push:
-    branches: [ master ]
+    branches:
+      - develop
 
 jobs:
 
@@ -33,6 +32,7 @@ jobs:
         id: get-ecr-password
         #run: echo "::set-output name=password::$(aws ecr get-login-password)"
         run: echo ${{ github.repository }}
+        run: echo "this is develop"
 
       - name: Build, tag, and push image to Amazon ECR
         env:
