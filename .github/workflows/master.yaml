@@ -31,8 +31,8 @@ jobs:
 
       - name: Get ECR password (temporary)
         id: get-ecr-password
-        #run: echo "::set-output name=password::$(aws ecr get-login-password)"
-        run: echo "this is master"
+        run: echo "::set-output name=password::$(aws ecr get-login-password)"
+
 
       - name: Build, tag, and push image to Amazon ECR
         env:
