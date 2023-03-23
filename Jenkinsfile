@@ -1,118 +1,149 @@
+
 pipeline {
   agent {
-    kubernetes {
-    cloud 'kubernetes'
-  }
-  }
+      kubernetes {
+        label 'hello'
+        yaml '''
+apiVersion: v1
+kind: Pod
+metadata:
+   name: clean-ci
+spec:
+   containers:
+   - name: docker
+     image: 'docker:stable-dind'
+     command:
+     - dockerd
+     - --host=unix:///var/run/docker.sock
+     - --host=tcp://0.0.0.0:8000
+     - --insecure-registry=167.71.195.24:30002
+     securityContext:
+       privileged: true
+     volumeMounts:
+     - mountPath: /var/run
+       name: cache-dir
+   - name: clean-ci
+     image: 'docker:stable'
+     command: ["/bin/sh"]
+     args: ["-c","while true; do sleep 86400; done"]
+     volumeMounts:
+     - mountPath: /var/run
+       name: cache-dir
 
-    parameters {
-        string(name:'TAG_NAME',defaultValue: '',description:'')
-    }
-    environment {
-        DOCKER_CREDENTIAL_ID = 'dockerhub-id'
-        GITHUB_CREDENTIAL_ID = 'github-id'
-        KUBECONFIG_CREDENTIAL_ID = 'demo-kubeconfig'
-        REGISTRY = 'docker.io'
-        DOCKERHUB_NAMESPACE = 'mrjiangguoqing'
-        GITHUB_ACCOUNT = 'mrjiangguoqing'
-        APP_NAME = 'devops-java-sample'
-    }
+   - name: go-lint
+     image: 'golangci/golangci-lint'
+     command: ["/bin/sh"]
+     args: ["-c","while true; do sleep 86400; done"]
+     volumeMounts:
+     - mountPath: /var/run
+       name: cache-dir
+
+
+   - name: trivy
+     image: 'aquasec/trivy:0.21.1'
+     command: ["/bin/sh"]
+     args: ["-c","while true; do sleep 86400; done"]
+     volumeMounts:
+     - mountPath: /var/run
+       name: cache-dir
+
+
+   volumes:
+   - name: cache-dir
+     emptyDir: {}
+        '''.stripIndent()
+          }
+          }
 
     stages {
         stage ('checkout scm') {
             steps {
                 checkout(scm)
             }
-        }
+       }
 
-        stage ('unit test') {
+
+		stage("build & SonarQube analysis") {
             steps {
-                container ('maven') {
-                   // sh 'mvn clean test'
-                   // sh 'mvn clean package -DskipTests'
+                script {
+                scannerHome = tool 'sonarsc'
+                }
+                withSonarQubeEnv('ok') {
+                sh "${scannerHome}/bin/sonar-scanner"
                 }
             }
         }
 
-        stage ('build & push') {
+        stage("Quality Gate"){
+			steps{
+				timeout(time: 15, unit: 'MINUTES') {
+					waitForQualityGate abortPipeline: true
+				}
+			}
+		}
+
+
+
+        stage('Build') {
             steps {
-                container ('docker') {
-                    sh 'docker build -f Dockerfile-online -t $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER .'
-                    withCredentials([usernamePassword(passwordVariable : 'DOCKER_PASSWORD' ,usernameVariable : 'DOCKER_USERNAME' ,credentialsId : "$DOCKER_CREDENTIAL_ID" ,)]) {
-                        sh 'echo "$DOCKER_PASSWORD" | docker login $REGISTRY -u "$DOCKER_USERNAME" --password-stdin'
-                        sh 'docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER'
-                    }
-                }
-            }
+              container ('docker'){
+              sh 'docker build -t 167.71.195.24:30002/myharbor/gojgq-dev-${GIT_BRANCH}-${GIT_SHA:0:7}-$(date +%s):v5 .'
+              sh 'docker login 167.71.195.24:30002 -u jgq -p Jgq123456'
+              sh 'docker push 167.71.195.24:30002/myharbor/gojgq-dev:v5'
+              sh '''
+              echo "you did it!!!!!!!  yes!!"
+              '''
+        }
+      }
         }
 
-        stage('push latest'){
-           when{
-             branch 'master'
-           }
-           steps{
-                container ('docker') {
-                  sh 'docker tag  $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:latest '
-                  sh 'docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:latest '
-                }
-           }
+        stage('scan with trivy') {
+            steps {
+                container ('trivy'){
+                sh "trivy image -f json -o results.json 167.71.195.24:30002/myharbor/gojgq:v3"
+                //recordIssues(tools: [trivy(pattern: 'results.json')])
+            }
+        }
         }
 
-        stage('deploy to dev') {
-          when{
-            branch 'master'
-          }
-          steps {
-            input(id: 'deploy-to-dev', message: 'deploy to dev?')
-            container ('docker') {
-                withCredentials([
-                    kubeconfigFile(
-                    credentialsId: env.KUBECONFIG_CREDENTIAL_ID,
-                    variable: 'KUBECONFIG')
-                    ]) {
-                    sh 'envsubst < deploy/dev-all-in-one/devops-sample.yaml | kubectl apply -f -'
-                }
-            }
-          }
-        }
-        stage('push with tag'){
-          when{
-            expression{
-              return params.TAG_NAME =~ /v.*/
-            }
-          }
-          steps {
-              container ('docker') {
-                input(id: 'release-image-with-tag', message: 'release image with tag?')
-                  withCredentials([usernamePassword(credentialsId: "$GITHUB_CREDENTIAL_ID", passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
-                    sh 'git config --global user.email "kubesphere@yunify.com" '
-                    sh 'git config --global user.name "kubesphere" '
-                    sh 'git tag -a $TAG_NAME -m "$TAG_NAME" '
-                    sh 'git push http://$GIT_USERNAME:$GIT_PASSWORD@github.com/$GITHUB_ACCOUNT/devops-java-sample.git --tags --ipv4'
-                  }
-                sh 'docker tag  $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:SNAPSHOT-$BRANCH_NAME-$BUILD_NUMBER $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:$TAG_NAME '
-                sh 'docker push  $REGISTRY/$DOCKERHUB_NAMESPACE/$APP_NAME:$TAG_NAME '
-          }
-          }
-        }
-        stage('deploy to production') {
-          when{
-            expression{
-              return params.TAG_NAME =~ /v.*/
-            }
-          }
-          steps {
-            input(id: 'deploy-to-production', message: 'deploy to production?')
-            container ('docker') {
-                withCredentials([
-                    kubeconfigFile(
-                    credentialsId: env.KUBECONFIG_CREDENTIAL_ID,
-                    variable: 'KUBECONFIG')
-                    ]) {
-                    sh 'envsubst < deploy/prod-all-in-one/devops-sample.yaml | kubectl apply -f -'
-                }
-            }
-          }
-        }
-    }
-}
+
+
+
+
+ /*       stage('deploy to dev'){
+ *         steps {
+ *            container ('kubectl'){
+ *                   sh '  kubectl apply -f ./yml/my.yaml'
+ *            }
+ *         }
+ */      }
+
+
+        //直接通过定义两个image scanner，自动修改指定镜像，完成测试环境与生产环境的操作。
+        //git commit测试环境代码库，(考虑自动commit或者手动commit)，人工测试，通过就commit生产代码库。
+
+/*           stage('push with tag'){
+*             steps {
+*                container ('docker'){
+*                    sh '''
+*                    echo "git push"
+*                    '''
+*                }
+*             }
+*           }
+
+*           stage('deploy to prod'){
+*             steps {
+*                //是否部署到生产环境。
+*                input(id: 'deploy-to-dev', message: 'deploy to dev?')
+*                container ('docker'){
+*
+
+        sh '''
+*                    echo "deploy"
+*                    '''
+*                }
+*           }
+*            //添加回滚功能
+*/     }
+

@@ -1,0 +1,27 @@
+name: CI
+on: push
+jobs:
+  prod-check:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying to production server on branch $GITHUB_REF"
+//如果是main分支的push，则deploy。
+
+name: CI
+on: push
+jobs:
+  dev-check:
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying to production server on branch $GITHUB_REF"
+
+name: CI
+on: push
+jobs:
+  uat-check:
+    if: ${{ github.ref == 'refs/heads/release' }}
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploying to production server on branch $GITHUB_REF"

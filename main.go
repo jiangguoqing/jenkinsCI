@@ -7,17 +7,17 @@ import (
 
 
 func home(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello from littlejgq"))
+	w.Write([]byte("Hello from littlejgq,v3"))
 }
 
 // Add a showSnippet handler function.
 func showSnippet(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Display a specific snippet..."))
+	w.Write([]byte("Display a specific snippet...v3"))
 }
 
 // Add a createSnippet handler function.
 func createSnippet(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Create a new snippet..."))
+	w.Write([]byte("Create a new snippet...v3"))
 }
 
 
@@ -31,5 +31,7 @@ func main() {
 	mux.HandleFunc("/snippet/create", createSnippet)
 	log.Println("Starting server on :5000")
 	err := http.ListenAndServe(":5000", mux)
+	//apollo动态获取配置。
+	//日志处理。
 	log.Fatal(err)
 }
