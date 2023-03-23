@@ -1,9 +1,8 @@
-
-name: Deploy to ECR
-
 on:
+  # Trigger the workflow on push or pull request
   push:
-    branches: [ master ]
+    branches:
+      - develop
 
 jobs:
 
@@ -32,13 +31,13 @@ jobs:
       - name: Get ECR password (temporary)
         id: get-ecr-password
         #run: echo "::set-output name=password::$(aws ecr get-login-password)"
-        run: echo "this is master"
+        run: echo "this is develop"
 
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: 566420885017.dkr.ecr.ap-southeast-1.amazonaws.com
           ECR_REPOSITORY: testjgq
-          IMAGE_TAG: 1.0
+          IMAGE_TAG: 1.0-release
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY-dev:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY-dev:$IMAGE_TAG
