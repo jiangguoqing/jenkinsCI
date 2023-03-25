@@ -13,6 +13,13 @@ jobs:
 
 
     steps:
+      - name: Generate build ID
+        id: prep
+        run: |
+          branch=${GITHUB_REF##*/}
+          sha=${GITHUB_SHA::8}
+          ts=$(date +%s)
+          echo "::set-output name=BUILD_ID::${branch}-${sha}-${ts}"
 
       - name: Check out code
         uses: actions/checkout@v2
@@ -37,7 +44,7 @@ jobs:
         env:
           ECR_REGISTRY: 566420885017.dkr.ecr.ap-southeast-1.amazonaws.com
           ECR_REPOSITORY: testjgq
-          IMAGE_TAG: 1.0-release
+          IMAGE_TAG: ${{ steps.prep.outputs.BUILD_ID }}
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
