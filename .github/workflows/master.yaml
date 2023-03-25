@@ -48,7 +48,8 @@ jobs:
         env:
           ECR_REGISTRY: 566420885017.dkr.ecr.ap-southeast-1.amazonaws.com
           ECR_REPOSITORY: testjgq
-          IMAGE_TAG: 1.0-master
+          IMAGE_TAG: ${{ steps.prep.outputs.BUILD_ID }}
+
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
