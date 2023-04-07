@@ -45,7 +45,7 @@ jobs:
       - name: Build, tag, and push image to Amazon ECR
         env:
           ECR_REGISTRY: 566420885017.dkr.ecr.ap-southeast-1.amazonaws.com
-          ECR_REPOSITORY: testjgq
+          ECR_REPOSITORY: testjgq-v2
           #IMAGE_TAG: dev-5.0.13
           IMAGE_TAG: ${{ steps.prep.outputs.BUILD_ID }}
         run: |
