@@ -7,7 +7,7 @@ import (
 
 
 func home(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Hello from littlejgq,v3"))
+	w.Write([]byte("Hello from littlejgq,v2"))
 }
 
 // Add a showSnippet handler function.
